@@ -52,7 +52,7 @@
     </div>
     <div class="form-group">
         <label for="gender">Пол:</label>
-<!--        <input id="gender" class="form-control" name="gender"/>-->
+        <!--        <input id="gender" class="form-control" name="gender"/>-->
         <select id="gender" class="form-control" name="gender">
             <option>Мужчина</option>
             <option>Женщина</option>
@@ -76,6 +76,11 @@
         <!--        <th>средний заработок</th>-->
         <th>редактирование</th>
     </tr>
+    <tr>
+        <td>средний возраст:</td>
+        <td></td>
+        <td class="averageAge"></td>
+    </tr>
     </thead>
     <tbody>
     </tbody>
@@ -92,6 +97,19 @@
             rows += row(user);
         });
         document.querySelector("table tbody").innerHTML = rows;
+        f()
+    }
+
+    function f() {
+        let nums = document.querySelectorAll('[data-rowid] :nth-child(3)')
+        let sum = 0;
+        let i = 0;
+
+        for(let number of nums){
+            i++
+            sum += +number.innerText;
+        }
+        document.querySelector(".averageAge").innerHTML = Math.floor(sum/i);
     }
 
     // Получение одного пользователя
@@ -106,6 +124,7 @@
         form.elements["gender"].value = user.gender;
         // form.elements["marital_status"].value = user.gender;
         // form.elements["average_income"].value = user.gender;
+        f()
     }
 
     // Добавление пользователя
@@ -126,6 +145,7 @@
         //console.log(user)
         reset();
         document.querySelector("table tbody").insertAdjacentHTML('beforeend', row(user));
+        f()
     }
 
     // Изменение пользователя  vv
@@ -148,6 +168,7 @@
         let elem = document.querySelector("tr[data-rowid='" + user.id + "']");
         elem.insertAdjacentHTML('afterend', row(user));
         elem.remove();
+        f()
     }
 
     // сброс формы
@@ -167,6 +188,7 @@
         let user = await response.json();
         console.log(user, 'удален');
         document.querySelector("tr[data-rowid='" + user.id + "']").remove();
+        f()
 
     }
 
@@ -215,6 +237,41 @@
 
     // загрузка пользователей
     GetUsers();
+
+</script>
+<script>
+    //подсчет среднего возраста
+    (async function calcAge() {
+        let response = await fetch('/users');
+        let users = await response.json();
+
+        console.log(users[1].age);
+        console.log(users.length);
+
+        let num = users.length;
+        console.log(num);
+
+        let sumAge = 0;
+
+        function sumOfAge() {
+
+            for (let i = 0; i <= num.length; i++) {
+                sumAge += users[i].age;
+            }
+            return sumAge
+        }
+
+        console.log(sumOfAge())
+        return
+    })()
+
+    //
+    // let averageAge = document.querySelector("averageAge").value;
+    // let tableOFAges = [];
+
+    // function createTableOFAges() {
+    //
+    // }
 
 </script>
 </body>

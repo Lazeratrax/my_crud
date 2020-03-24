@@ -3,8 +3,13 @@ const fs = require("fs");
 let dataGeneral = fs.readFileSync("users.json", "utf8");
 let users = JSON.parse(dataGeneral);
 
-const add = async function (req) {
+function random(users) {
+   return Math.floor(users.reduce(function (ac, a) {
+       return ac + +a.age
+   }, 0)/users.length);
+}
 
+const add = async function (req) {
     if (req.name && req.age && req.gender) {
         const userName = req.name;
         const userAge = req.age;
@@ -86,11 +91,8 @@ const update = async function (req) {
     }
 }
 
-
 const del = async function (req) {
-
-    const id = req;
-
+    const id = req; // получаем id
     let index = -1;
     // находим индекс пользователя в массиве
     for (let i = 0; i < users.length; i++) {
@@ -108,7 +110,7 @@ const del = async function (req) {
 
         return user
     } else {
-        throw new Error('user not found');
+        throw new Error('пользователь не найден');
     }
 
 }
