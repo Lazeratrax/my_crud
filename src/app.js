@@ -1,6 +1,8 @@
 const express = require('express');
 // const router = require('./routers/export-routers');
 const path = require('path');
+const csrf = require('csurf');
+const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const Handlebars = require('handlebars')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
@@ -13,10 +15,10 @@ const addRoutes = require("./routes/add");
 const ordersRoutes = require('./routes/orders');
 const courseRoutes = require("./routes/courses");
 const authRoutes = require('./routes/auth');
-const User = require('./models/user');
+// const User = require('./models/user');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
-
+const keys = require('./keys')
 // C:\Program Files\MongoDB\Server\4.2\data\
 
 //const MONGODB_URI = `mongodb+srv://LazarevKirill:opeCv6qi2S5l7GaD@cluster0-jgb4m.mongodb.net/shop`;
@@ -30,7 +32,7 @@ const hbs = exphbs.create({
 });
 const store = new MongoStore({
     collection: 'session',
-    uri: MONGODB_URI
+    uri: keys.MONGODB_URI
 })
 
 app.engine('hbs', hbs.engine);
@@ -52,11 +54,13 @@ app.set('views', 'src/views');
 app.use(express.static(path.join(__dirname, '../', 'src/public')));
 app.use(express.urlencoded({extended: true}))
 app.use(session({
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store
 }))
+app.use(csrf())
+app.use(flash())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
@@ -88,7 +92,7 @@ async function start() {
     try {
          // await mongoose.connect(url, {
 
-        await mongoose.connect(MONGODB_URI, {
+        await mongoose.connect(keys.MONGODB_URI, {
             useNewUrlParser: true,
             useFindAndModify: false,
             useUnifiedTopology: true
