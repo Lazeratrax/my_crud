@@ -15,10 +15,13 @@ const addRoutes = require("./routes/add");
 const ordersRoutes = require('./routes/orders');
 const courseRoutes = require("./routes/courses");
 const authRoutes = require('./routes/auth');
+const profileRoutes = require('./routes/profile');
 // const User = require('./models/user');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
 const keys = require('./keys')
+const errorHandler = require('./middleware/error')
+const fileMiddleware = require('./middleware/file')
 // C:\Program Files\MongoDB\Server\4.2\data\
 
 //const MONGODB_URI = `mongodb+srv://LazarevKirill:opeCv6qi2S5l7GaD@cluster0-jgb4m.mongodb.net/shop`;
@@ -59,6 +62,7 @@ app.use(session({
     saveUninitialized: false,
     store
 }))
+app.use(fileMiddleware.single('avatar'))
 app.use(csrf())
 app.use(flash())
 app.use(varMiddleware)
@@ -70,7 +74,9 @@ app.use('/add', addRoutes);
 app.use('/card', cardRoutes);
 app.use('/orders', ordersRoutes);
 app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes)
 
+app.use(errorHandler);
 //
 // app.get('/', (req, res) => {
 //     // res.sendFile(path.join(__dirname, 'views', 'index.hbs'))
