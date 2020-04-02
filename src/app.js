@@ -22,7 +22,7 @@ const keys = require('./keys')
 // C:\Program Files\MongoDB\Server\4.2\data\
 
 //const MONGODB_URI = `mongodb+srv://LazarevKirill:opeCv6qi2S5l7GaD@cluster0-jgb4m.mongodb.net/shop`;
-const MONGODB_URI = `mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false`;
+// const MONGODB_URI = `mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false`;
 
 const app = express();
 const hbs = exphbs.create({
